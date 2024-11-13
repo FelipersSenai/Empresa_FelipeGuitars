@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Felipe Guitars 🎸</title>
+    <link rel="stylesheet" href="css_pro.css">
+    <link rel="icon" href="https://thumbs.dreamstime.com/b/print-271111800.jpg" type="image/jpeg">
+</head>
+<body>
+    <header class="header">
+        <h1>Produtos 🎧</h1>
+    </header>
+
+    <nav class="navbar">
+        <a href="https://feliperssenai.github.io/Empresa_FelipeGuitars/index.html">Sobre</a>
+        <a href="https://feliperssenai.github.io/Empresa_FelipeGuitars/contato.html">Contato</a>
+        <a href="https://feliperssenai.github.io/Empresa_FelipeGuitars/produtos.html">Produtos</a>
+    </nav>
+
+    <main class="content">
+        <button id="carrinho-btn" onclick="toggleCarrinho()">🛒</button>
+        <section id="produtos">
+            <h2>Produtos</h2>
+            <div class="product-list">
+                <div class="product" data-nome="Guitarra LesPaul">
+                    <img src="https://i.postimg.cc/VN2qDfDM/image.png" alt="Guitarra LesPaul">
+                    <h3>Guitarra LesPaul</h3>
+                    <p>R$ 2.999,99</p>
+                    <button onclick="toggleCarrinhoItem(this, 'Guitarra LesPaul')">Adicionar ao Carrinho</button>
+                </div>
+                <div class="product" data-nome="Boss GT-1">
+                    <img src="https://i.postimg.cc/3xcmxrM6/image.png" alt="Boss GT-1">
+                    <h3>Boss GT-1</h3>
+                    <p>R$ 1.999,99</p>
+                    <button onclick="toggleCarrinhoItem(this, 'Boss GT-1')">Adicionar ao Carrinho</button>
+                </div>
+                <div class="product" data-nome="Cabo P10">
+                    <img src="https://i.postimg.cc/yx1kT24c/image.png" alt="Cabo P10">
+                    <h3>Cabo P10</h3>
+                    <p>R$ 19,99</p>
+                    <button onclick="toggleCarrinhoItem(this, 'Cabo P10')">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Carrinho de Compras -->
+        <section id="carrinho" class="hidden">
+            <h4>Carrinho de Compras</h4>
+            <ul id="carrinho-lista"></ul>
+            <p id="carrinho-vazio">Seu carrinho está vazio.</p>
+            <button id="finalizar-compra">Finalizar Compra</button>
+        </section>
+    </main>
+
+    <script>
+        const carrinho = [];
+
+        function toggleCarrinho() {
+            const carrinhoElement = document.getElementById('carrinho');
+            carrinhoElement.classList.toggle('hidden');
+        }
+
+        function toggleCarrinhoItem(button, produto) {
+            const index = carrinho.indexOf(produto);
+
+            if (index > -1) {
+                removerDoCarrinho(produto);
+                button.textContent = "Adicionar ao Carrinho";
+            } else {
+                adicionarAoCarrinho(produto);
+                button.textContent = "Remover do Carrinho";
+            }
+        }
+
+        function adicionarAoCarrinho(produto) {
+            const carrinhoLista = document.getElementById('carrinho-lista');
+            const carrinhoVazio = document.getElementById('carrinho-vazio');
+            
+            // Verifica se o item já está no carrinho
+            if (carrinho.includes(produto)) return;
+
+            // Adiciona o item ao array carrinho
+            carrinho.push(produto);
+
+            // Cria um novo item no carrinho com ícone de lixeira
+            const item = document.createElement('li');
+            item.classList.add('carrinho-item');
+            item.textContent = produto;
+
+            // Cria o ícone de lixeira
+            const lixeira = document.createElement('span');
+            lixeira.classList.add('lixeira');
+            lixeira.textContent = "🗑️";
+            lixeira.onclick = () => {
+                removerDoCarrinho(produto);
+                atualizarBotaoProduto(produto, "Adicionar ao Carrinho");
+            };
+
+            item.appendChild(lixeira);
+            carrinhoLista.appendChild(item);
+
+            // Esconde a mensagem de carrinho vazio
+            carrinhoVazio.style.display = 'none';
+        }
+
+        function removerDoCarrinho(produto) {
+            const index = carrinho.indexOf(produto);
+            if (index > -1) {
+                carrinho.splice(index, 1);
+
+                // Remove o item do carrinho
+                const carrinhoLista = document.getElementById('carrinho-lista');
+                const items = carrinhoLista.getElementsByClassName('carrinho-item');
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].textContent.includes(produto)) {
+                        items[i].remove();
+                        break;
+                    }
+                }
+
+                // Mostra a mensagem de carrinho vazio se não houver itens
+                if (carrinho.length === 0) {
+                    document.getElementById('carrinho-vazio').style.display = 'block';
+                }
+            }
+        }
+
+        function atualizarBotaoProduto(produto, texto) {
+            const produtos = document.querySelectorAll('.product');
+            produtos.forEach((p) => {
+                if (p.getAttribute('data-nome') === produto) {
+                    const button = p.querySelector('button');
+                    button.textContent = texto;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
